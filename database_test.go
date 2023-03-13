@@ -139,3 +139,24 @@ func TestSQLInject(t *testing.T) {
 		fmt.Println("Gagal login", username)
 	}
 }
+
+func TestLastInsertID(t *testing.T) {
+	db := GetConnection()
+	defer db.Close()
+
+	email := "ranggasuryap15"
+	comment := "Mantap gan"
+
+	ctx := context.Background()
+	sqlQuery := "INSERT INTO comments(email, comment) VALUES(?, ?)"
+	result, err := db.ExecContext(ctx, sqlQuery, email, comment)
+	if err != nil {
+		panic(err)
+	}
+
+	insertId, err := result.LastInsertId()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Last Insert ID:", insertId)
+}
